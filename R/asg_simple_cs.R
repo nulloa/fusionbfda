@@ -47,6 +47,7 @@ asg_simple_cs <- function(y, x, count, group, season, z, x2, count2, group2, sea
              group2 = group2, seas2 = as.numeric(season2),
              k=6,
              nG = length(unique(group)), n = length(y),
+             n2 = length(z),
              nS = length(unique(season)))
   # Set priors
   dat <- c(dat, priors)
