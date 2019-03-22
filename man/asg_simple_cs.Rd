@@ -4,8 +4,9 @@
 \alias{asg_simple_cs}
 \title{asg_simple_cs}
 \usage{
-asg_simple_cs(y, x, count, group, season, priors, niter = 4000,
-  nwarmup = niter/2, nchains = 3, thin = 1, inits = NULL)
+asg_simple_cs(y, x, count, group, season, z, x2, count2, group2, season2,
+  priors, niter = 4000, nwarmup = niter/2, nchains = 3, thin = 1,
+  inits = NULL)
 }
 \arguments{
 \item{y}{response variable which follows binomial dist}
@@ -14,7 +15,19 @@ asg_simple_cs(y, x, count, group, season, priors, niter = 4000,
 
 \item{count}{n in binomial dist}
 
-\item{group}{groups of response}
+\item{group}{group of response}
+
+\item{season}{season of response}
+
+\item{z}{second response variable which follows binomial dist}
+
+\item{x2}{explanatory variable for z}
+
+\item{count2}{n in binomial dist}
+
+\item{group2}{groups of response z}
+
+\item{season2}{season of response z}
 
 \item{priors}{list of priors}
 

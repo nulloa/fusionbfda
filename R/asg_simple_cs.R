@@ -5,7 +5,13 @@
 #' @param y response variable which follows binomial dist
 #' @param x explanatory variable
 #' @param count n in binomial dist
-#' @param group groups of response
+#' @param group group of response
+#' @param season season of response
+#' @param z second response variable which follows binomial dist
+#' @param x2 explanatory variable for z
+#' @param count2 n in binomial dist
+#' @param group2 groups of response z
+#' @param season2 season of response z
 #' @param priors list of priors
 #' @param niter number of interations to be run (default=4000)
 #' @param nchains number of chains to be run (default=3)
