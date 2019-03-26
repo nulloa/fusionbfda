@@ -1,4 +1,4 @@
-#' horseshoe_bfda_fc
+#' fusion_bfda
 #' 
 #' Runs BFDA with horseshoe prior on betas for forecasting
 #'
