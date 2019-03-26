@@ -1,16 +1,21 @@
 data {
   int<lower=1> N_obs; //total number of obs
+  int<lower=1> N_obs2; //total number of obs
   int<lower=1> N_subj; //total number of season-region combination
   int<lower=1> N_weeks; //total number of weeks ie obs per season-region
   int<lower=1> dim_space; // number of eigen functions
   real W[N_obs]; // observed value of flu
+  real Z[N_obs2]; // observed value of flu
   int week[N_obs]; // indicator for the week observed
+  int week2[N_obs2]; // indicator for the week observed
   int subj[N_obs]; // indicator for the observed subject
+  int subj2[N_obs2]; // indicator for the observed subject
   real E[N_weeks, dim_space]; // observed value of flu
 }
 
 parameters {
   real<lower=0> eps; // SD for data model
+  real<lower=0> eps2; // SD for data model
   vector[dim_space] beta[N_subj];
 }
 
@@ -55,10 +60,15 @@ transformed parameters {
 model {
 
   eps ~ cauchy(0,1); //Prior on model SD
+  eps2 ~ cauchy(0,1); //Prior on model SD
   
   
   for(i in 1:N_obs){
     W[i]~normal(m[subj[i], week[i]], eps);
+  }
+  
+  for(i in 1:N_obs2){
+    Z[i] ~ normal(m[subj2[i],week2[i]], eps2);
   }
   
   for(i in 1:N_subj){ 
@@ -68,13 +78,3 @@ model {
   }
   
 }
-
-// generated quantities {
-//   vector[N_obs*N_subj] log_lik;
-//   for(i in 1:N_subj){
-//     for(t in 1:N_obs){
-//       log_lik[i] = normal_lpmf(W[i,t] | m[i,t], eps);
-//     }
-//   }
-// }
-
