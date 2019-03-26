@@ -4,7 +4,6 @@ data {
   int<lower=1> N_subj; //total number of season-region combination
   int<lower=1> N_weeks; //total number of weeks ie obs per season-region
   int<lower=1> dim_space; // number of eigen functions
-  int<lower=1> N_group; // number of groups
   real W[N_obs]; // observed value of flu
   real Z[N_obs2]; // observed value of flu
   int week[N_obs]; // indicator for the week observed
