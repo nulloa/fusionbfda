@@ -21,6 +21,7 @@ parameters {
   vector<lower=0>[N_group] tau; // SD for beta or Global Shrinkage Param
   vector<lower=0>[dim_space] lamb[N_group]; // SD for beta or Local Shrinkage Param
   vector[dim_space] beta[N_subj];
+  vector[N_subj] delta;
 }
 
 transformed parameters {
@@ -80,10 +81,12 @@ model {
   }
   
     for(i in 1:N_obs2){
-    Z[i] ~ normal(m[subj2[i],week2[i]], eps2);
+    Z[i] ~ normal(m[subj2[i],week2[i]] + delta[subj2[i]], eps2);
   }
 
   for(i in 1:N_subj){
+    delta[i] ~ normal(0, 1);
+    
     for (j in 1:dim_space){
       beta[i,j] ~ normal(0, lamb[group[i],j]*tau[group[i]]);
 	  }

@@ -25,6 +25,7 @@ parameters {
   cholesky_factor_corr[k] Lcorr;
   vector[k] mu_theta[nG]; // Means for Parameters; This is nG x K matrix
   vector[k] mu_g;
+  vector[nG] delta;
 }
 
 transformed parameters {
@@ -36,17 +37,17 @@ transformed parameters {
       psi[i] = inv_logit(ctheta[group[i], seas[i], 1] + (ctheta[group[i], seas[i], 3] - ctheta[group[i], seas[i], 1])*exp(-((x[i] - ctheta[group[i], seas[i], 4])^2)/(2*(exp(ctheta[group[i], seas[i], 5]))^2)));
     }
     else{
-      psi[i] = inv_logit((ctheta[group[i], seas[i], 2] + (ctheta[group[i], seas[i], 3] - ctheta[group[i], seas[i], 2])*exp(-((x[i] - ctheta[group[i], seas[i], 4])^2)/(2*(exp(ctheta[group[i], seas[i], 6]))^2)));
+      psi[i] = inv_logit(ctheta[group[i], seas[i], 2] + (ctheta[group[i], seas[i], 3] - ctheta[group[i], seas[i], 2])*exp(-((x[i] - ctheta[group[i], seas[i], 4])^2)/(2*(exp(ctheta[group[i], seas[i], 6]))^2)));
     }
     
   }
 
   for(i in 1:n2){
     if (x2[i] < ctheta[group2[i], seas2[i], 4]){
-      psi2[i] = (ctheta[group2[i], seas2[i], 1] + (ctheta[group2[i], seas2[i], 3] - ctheta[group2[i], seas2[i], 1])*exp(-((x2[i] - ctheta[group2[i], seas2[i], 4])^2)/(2*(exp(ctheta[group2[i], seas2[i], 5]))^2)));
+      psi2[i] = inv_logit(ctheta[group2[i], seas2[i], 1] + (ctheta[group2[i], seas2[i], 3] - ctheta[group2[i], seas2[i], 1])*exp(-((x2[i] - ctheta[group2[i], seas2[i], 4])^2)/(2*(exp(ctheta[group2[i], seas2[i], 5]))^2)));
     }
     else{
-      psi2[i] = (ctheta[group2[i], seas2[i], 2] + (ctheta[group2[i], seas2[i], 3] - ctheta[group2[i], seas2[i], 2])*exp(-((x2[i] - ctheta[group2[i], seas2[i], 4])^2)/(2*(exp(ctheta[group2[i], seas2[i], 6]))^2)));
+      psi2[i] = inv_logit(ctheta[group2[i], seas2[i], 2] + (ctheta[group2[i], seas2[i], 3] - ctheta[group2[i], seas2[i], 2])*exp(-((x2[i] - ctheta[group2[i], seas2[i], 4])^2)/(2*(exp(ctheta[group2[i], seas2[i], 6]))^2)));
     }
     
   }
@@ -65,6 +66,7 @@ model {
   Lcorr ~ lkj_corr_cholesky(1); //prior for correlations
   
   for(g in 1:nG){
+    delta[g] ~ normal(0,1);
     mu_theta[g] ~ multi_normal_cholesky(mu_g, diag_pre_multiply(tau, Lcorr));
     for(s in 1:nS){
       row(ctheta[g], s) ~ multi_normal_cholesky(mu_theta[g], diag_pre_multiply(tau2, Lcorr)); 
@@ -73,15 +75,14 @@ model {
   }
   
   y ~ normal(psi, eps);
-  z ~ normal(psi2, eps2);
+  
+  for(i in 1:n2){
+    z[i] ~ normal(psi2[i] + delta[group2[i]], eps2);
+  }
 }
 
 generated quantities {
-  vector[n] log_lik;
   matrix[k,k] Omega;
   Omega = multiply_lower_tri_self_transpose(Lcorr);
-  for(i in 1:n){
-    log_lik[i] = binomial_logit_lpmf(y[i] | num[i], lpsi[i]);
-  }
 }
 
