@@ -31,7 +31,7 @@
 #' @export
 
 
-asg_simple_cs <- function(y, x, count, group, season, z, x2, count2, group2, season2, priors, niter=4000, nwarmup=niter/2, nchains=3, thin=1, inits=NULL){
+asg_simple_cs <- function(y, x, group, season, z, x2, group2, season2, priors, niter=4000, nwarmup=niter/2, nchains=3, thin=1, inits=NULL){
   # Load Library
   require(rstan)
   
@@ -41,8 +41,8 @@ asg_simple_cs <- function(y, x, count, group, season, z, x2, count2, group2, sea
   }
   
   # Setup data for model
-  dat = list(y = y, x = x, num = count, 
-             z = z, x2 = x2, num2 = count2, 
+  dat = list(y = y, x = x,
+             z = z, x2 = x2, 
              group = group, seas = as.numeric(season),
              group2 = group2, seas2 = as.numeric(season2),
              k=6,
