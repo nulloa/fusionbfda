@@ -19,6 +19,7 @@ data {
 parameters {
   real<lower=0> eps;
   real<lower=0> eps2;
+  real<lower=0> eps_d;
   matrix[nS, k] ctheta [nG]; // Parameters for Each Year.  This is nG x nS x K array
   vector<lower=0> [k] tau; // Standard Deviation for Parameters for S seasons
   vector<lower=0> [k] tau2;
@@ -58,6 +59,7 @@ model {
   
   eps ~ cauchy(0,1); //Prior on model SD
   eps2 ~ cauchy(0,1); //Prior on model SD
+  eps_d ~ cauchy(0,1); //Prior on model SD
   
   //Prior for Error Terms by Year
   mu_g ~ multi_normal(mu0, C0); //prior on season mean
@@ -66,7 +68,7 @@ model {
   Lcorr ~ lkj_corr_cholesky(1); //prior for correlations
   
   for(g in 1:nG){
-    delta[g] ~ normal(0,1);
+    delta[g] ~ normal(0,eps_d);
     mu_theta[g] ~ multi_normal_cholesky(mu_g, diag_pre_multiply(tau, Lcorr));
     for(s in 1:nS){
       row(ctheta[g], s) ~ multi_normal_cholesky(mu_theta[g], diag_pre_multiply(tau2, Lcorr)); 

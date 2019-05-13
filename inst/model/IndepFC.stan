@@ -16,6 +16,7 @@ data {
 parameters {
   real<lower=0> eps; // SD for data model
   real<lower=0> eps2; // SD for data model
+  real<lower=0> eps_d; // SD for data model
   vector[dim_space] beta[N_subj];
   vector[N_subj] delta;
 }
@@ -62,6 +63,7 @@ model {
 
   eps ~ cauchy(0,1); //Prior on model SD
   eps2 ~ cauchy(0,1); //Prior on model SD
+  eps_d ~ cauchy(0,1); //Prior on model SD
   
   
   for(i in 1:N_obs){
@@ -73,7 +75,7 @@ model {
   }
   
   for(i in 1:N_subj){
-    delta[i] ~ normal(0, 1);
+    delta[i] ~ normal(0, eps_d);
     
     for (j in 1:dim_space){
       beta[i,j] ~ normal(0, 10);

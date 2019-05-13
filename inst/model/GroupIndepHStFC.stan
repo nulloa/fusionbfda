@@ -16,6 +16,7 @@ data {
 parameters {
   real<lower=0> eps; // SD for data model
   real<lower=0> eps2; // SD for data model
+  real<lower=0> eps_d; // SD for data model
   vector<lower=0>[N_subj] tau; // SD for beta or Global Shrinkage Param
   vector<lower=0>[dim_space] lamb[N_subj]; // SD for beta or Local Shrinkage Param
   vector[dim_space] beta[N_subj];
@@ -64,6 +65,7 @@ model {
   
   eps ~ cauchy(0,1); //Prior on model SD
   eps2 ~ cauchy(0,1); //Prior on model SD
+  eps_d ~ cauchy(0,1); //Prior on model SD
   tau ~ student_t(4, 0, 1); //Prior on Global Shrinkage
   
   
@@ -83,7 +85,7 @@ model {
   }
 
   for(i in 1:N_subj){
-    delta[i] ~ normal(0, 1);
+    delta[i] ~ normal(0, eps_d);
     
     for (j in 1:dim_space){
       beta[i,j] ~ normal(0, lamb[i,j]*tau[i]);
