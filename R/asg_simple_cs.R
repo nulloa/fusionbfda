@@ -40,15 +40,20 @@ asg_simple_cs <- function(y, x, group, season, z, x2, group2, season2, priors, n
     options(mc.cores = parallel::detectCores())
   }
   
+  subj = as.numeric(factor(paste0(group2, season2)))
+  
   # Setup data for model
   dat = list(y = y, x = x,
              z = z, x2 = x2, 
+             subj = subj,
              group = group, seas = as.numeric(season),
              group2 = group2, seas2 = as.numeric(season2),
              k=6,
              nG = length(unique(group)), n = length(y),
              n2 = length(z),
-             nS = length(unique(season)))
+             nS = length(unique(season)),
+             nSubj = length(unique(subj))
+             )
   # Set priors
   dat <- c(dat, priors)
   
