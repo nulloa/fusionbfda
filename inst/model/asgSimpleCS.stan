@@ -3,8 +3,10 @@ data {
   int<lower=1> n2; //total number of obs over all locations and seasons
   int<lower=1> nG; //number of regions
   int<lower=1> nS; //number of seasons
+  int<lower=1> nSubj; //number of reg-season combos
   int x[n]; //week of observation indicator
   int x2[n2]; //week of observation indicator
+  int<lower = 1, upper = nSubj> subj[n2]; //indicator for reg-seas combo
   int<lower = 1, upper = nG> group[n]; //indicator for each group
   int<lower = 1, upper = nG> group2[n2]; //indicator for each group
   real<lower = 0> y[n]; // observed value of flu
@@ -67,8 +69,12 @@ model {
   tau2 ~ student_t(4, 0, 1); //Prior on Season SD
   Lcorr ~ lkj_corr_cholesky(1); //prior for correlations
   
+  
+  for(i in 1:nSubj){
+    delta[i] ~ normal(0,eps_d);
+  }
+  
   for(g in 1:nG){
-    delta[g] ~ normal(0,eps_d);
     mu_theta[g] ~ multi_normal_cholesky(mu_g, diag_pre_multiply(tau, Lcorr));
     for(s in 1:nS){
       row(ctheta[g], s) ~ multi_normal_cholesky(mu_theta[g], diag_pre_multiply(tau2, Lcorr)); 
@@ -79,7 +85,7 @@ model {
   y ~ normal(psi, eps);
   
   for(i in 1:n2){
-    z[i] ~ normal(psi2[i] + delta[group2[i]], eps2);
+    z[i] ~ normal(psi2[i] + delta[subj[i]], eps2);
   }
 }
 
