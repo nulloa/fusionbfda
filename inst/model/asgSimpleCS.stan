@@ -28,7 +28,7 @@ parameters {
   cholesky_factor_corr[k] Lcorr;
   vector[k] mu_theta[nG]; // Means for Parameters; This is nG x K matrix
   vector[k] mu_g;
-  vector[nG] delta;
+  vector[nSubj] delta;
 }
 
 transformed parameters {
