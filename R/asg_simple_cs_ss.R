@@ -43,8 +43,7 @@ asg_simple_cs_ss <- function(y, x, group, season, priors, niter=4000, nwarmup=ni
              k=6,
              nG = length(unique(group)), 
              n = length(y),
-             nS = length(unique(season)),
-             nSubj = length(unique(subj))
+             nS = length(unique(season))
              )
   # Set priors
   dat <- c(dat, priors)
