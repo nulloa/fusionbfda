@@ -2,5 +2,7 @@
 
 export(asg)
 export(asg_simple_cs)
+export(asg_simple_cs_ss)
 export(fusion_bfda)
+export(fusion_bfda_ss)
 export(normal_mle)
