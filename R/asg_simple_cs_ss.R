@@ -35,12 +35,9 @@ asg_simple_cs_ss <- function(y, x, group, season, priors, niter=4000, nwarmup=ni
     options(mc.cores = parallel::detectCores())
   }
   
-  subj = as.numeric(factor(paste0(group2, season2)))
-  
   # Setup data for model
   dat = list(y = y, 
              x = x,
-             subj = subj,
              group = group, 
              seas = as.numeric(season),
              k=6,
